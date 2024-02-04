@@ -160,7 +160,7 @@
         product_id INT NOT NULL ,
         type_id INT REFERENCES types(type_id),
         user_id INT REFERENCES users(id),	
-        Quentity INT DEFAULT 0
+        Quentity INT DEFAULT 1
         )
         `
 
