@@ -66,7 +66,6 @@ const {
 
 router.post("/add", isAdmin, photoUpload.array("image", 4), async (req, res) => {
   try {
-    console.log(req.body)
     // Validation
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: "You must send images" });
@@ -131,6 +130,7 @@ router.post("/add", isAdmin, photoUpload.array("image", 4), async (req, res) => 
     res.json({ msg: "One product saved" });
   } catch (error) {
     res.status(500).json({ msg: error.message });
+    console.log(error)
   }
 });
 
