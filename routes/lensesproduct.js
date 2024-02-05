@@ -81,7 +81,7 @@ router.post(
 
 router.get("/", async (req, res) => {
   try {
-    let sql = `SELECT lp.product_id, lp.product_name, lp.salary, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType" FROM lensesProducts lp JOIN types typs ON lp.type_id = typs.type_id JOIN lensesBrands bra ON lp.brand_id = bra.brand_id JOIN lensesColor lc ON lp.lensesColor_id = lc.lensesColor_id JOIN lensesReplacement lr ON lp.lensesReplacement_id = lr.lensesReplacement_id JOIN lensesType lt ON lp.lensesType_id = lt.lensesType_id;`;
+    let sql = `SELECT lp.product_id, lp.product_name, lp.salary, lp.model_number,lp.type_id,typs.type_name AS "type", bra.brand_name AS "brand name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType" FROM lensesProducts lp JOIN types typs ON lp.type_id = typs.type_id JOIN lensesBrands bra ON lp.brand_id = bra.brand_id JOIN lensesColor lc ON lp.lensesColor_id = lc.lensesColor_id JOIN lensesReplacement lr ON lp.lensesReplacement_id = lr.lensesReplacement_id JOIN lensesType lt ON lp.lensesType_id = lt.lensesType_id;`;
     let result = await client.query(sql);
     result = result.rows;
 
@@ -98,4 +98,26 @@ router.get("/", async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 });
+
+router.get("/:id", async (req, res) => {
+  try {
+    let id = req.params.id ; 
+    let sql = `SELECT lp.product_id, lp.product_name, lp.salary, lp.model_number,lp.type_id,typs.type_name AS "type", bra.brand_name AS "brand name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType" FROM lensesProducts lp JOIN types typs ON lp.type_id = typs.type_id JOIN lensesBrands bra ON lp.brand_id = bra.brand_id JOIN lensesColor lc ON lp.lensesColor_id = lc.lensesColor_id JOIN lensesReplacement lr ON lp.lensesReplacement_id = lr.lensesReplacement_id JOIN lensesType lt ON lp.lensesType_id = lt.lensesType_id  where product_id = $1;`;
+    let result = await client.query(sql,[id]);
+    result = result.rows;
+
+    for (let i = 0; i < result.length; i++) {
+      let pID = result[i].product_id;
+      let sql2 =
+        "SELECT image, image_id FROM imagesLensessProduct WHERE product_id = $1";
+      let images = (await client.query(sql2, [pID])).rows;
+      result[i].images = images;
+    }
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+
 module.exports = router;
