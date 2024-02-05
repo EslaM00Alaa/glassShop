@@ -34,6 +34,8 @@ app.use('/api/glassesProduct', require("./routes/glassesProducts"))
 app.use('/api/lensesProduct', require("./routes/lensesproduct"))
 app.use('/api/lenses', require("./routes/lenses"))
 app.use('/api/basket', require("./routes/basket/addToBasket"))
+app.use('/api/offer', require("./routes/offer"))
+app.use('/api/offerproduct', require("./routes/offerproducts"))
 
 
 
