@@ -13,7 +13,7 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
     if (type == 1) {
       sql = `
       SELECT gp.product_id, gp.product_name, gp.salary AS salary_before,  (gp.salary - ((gp.salary * go.percent )/100))   AS salary_after, go.percent AS percent  , gp.model_number, typs.type_name AS "type", 
-        bra.brand_name AS "brand name", sh.shape AS "shape", ft.type AS "frame_type", fc.color AS "frame_color", 
+        bra.brand_name AS "brand_name", sh.shape AS "shape", ft.type AS "frame_type", fc.color AS "frame_color", 
         fm.material AS "frame_material", gs.size AS "size", glc.color AS "lenses_color" 
       FROM glassProducts gp 
       JOIN Types typs ON gp.type_id = typs.type_id 
@@ -29,7 +29,7 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
     `;
     } else if (type == 2) {
       sql = `
-        SELECT lp.product_id, lp.product_name,lp.salary AS salary_before,  (lp.salary - ((lp.salary * lo.percent )/100))   AS salary_after,lo.percent AS percent, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType" FROM lensesProducts lp JOIN types typs ON lp.type_id = typs.type_id JOIN lensesBrands bra ON lp.brand_id = bra.brand_id JOIN lensesColor lc ON lp.lensesColor_id = lc.lensesColor_id JOIN lensesReplacement lr ON lp.lensesReplacement_id = lr.lensesReplacement_id JOIN lensesType lt ON lp.lensesType_id = lt.lensesType_id JOIN lensesoffer lo ON lp.brand_id = lo.brand_id ${condtion2};`;
+        SELECT lp.product_id, lp.product_name,lp.salary AS salary_before,  (lp.salary - ((lp.salary * lo.percent )/100))   AS salary_after,lo.percent AS percent, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType" FROM lensesProducts lp JOIN types typs ON lp.type_id = typs.type_id JOIN lensesBrands bra ON lp.brand_id = bra.brand_id JOIN lensesColor lc ON lp.lensesColor_id = lc.lensesColor_id JOIN lensesReplacement lr ON lp.lensesReplacement_id = lr.lensesReplacement_id JOIN lensesType lt ON lp.lensesType_id = lt.lensesType_id JOIN lensesoffer lo ON lp.brand_id = lo.brand_id ${condtion2};`;
     } else {
       return res
         .status(404)
