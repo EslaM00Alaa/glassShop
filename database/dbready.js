@@ -1,57 +1,56 @@
- const client = require("./db");
+const client = require("./db");
 
- async function isReady() {
-   try {
-    
-     const tableCheckQuery = `
+async function isReady() {
+  try {
+    const tableCheckQuery = `
        SELECT EXISTS (
          SELECT 1
          FROM information_schema.tables
          WHERE table_name = ANY($1::text[])
        );
      `;
-     const tablesToCheck = [
-       "admins",
-       "classifications",
-       "types",
-       "glasslensescolor",
-       "glasssize",
-       "framtype",
-       "framematerial",
-       "glassbrands",
-       "frameshape",
-       "framecolor",
-       "glassproducts",
-       "lensesbrands",
-       "lensescolor",
-       "lensesreplacement",
-       "lenstype",
-       "lensesproducts",
-       "imagesglassesproduct",
-       "imageslensessproduct",
-       "users",
-       "basket"
-     ];
- 
-     const res = await client.query(tableCheckQuery, [tablesToCheck]);
-     const existingTables = res.rows[0].exists;
- 
-     if (!existingTables) {
-       const createTableQueries = [
-         `
+    const tablesToCheck = [
+      "admins",
+      "classifications",
+      "types",
+      "glasslensescolor",
+      "glasssize",
+      "framtype",
+      "framematerial",
+      "glassbrands",
+      "frameshape",
+      "framecolor",
+      "glassproducts",
+      "lensesbrands",
+      "lensescolor",
+      "lensesreplacement",
+      "lenstype",
+      "lensesproducts",
+      "imagesglassesproduct",
+      "imageslensessproduct",
+      "users",
+      "basket",
+    ];
+
+    const res = await client.query(tableCheckQuery, [tablesToCheck]);
+    const existingTables = res.rows[0].exists;
+
+    if (!existingTables) {
+      const createTableQueries = [
+        `
          CREATE TABLE admins (
            id SERIAL PRIMARY KEY,
            password VARCHAR(255) NOT NULL,
            username VARCHAR(255) NOT NULL
          );
          `,
-         `
+        `
          CREATE TABLE classifications (
            classify_id SERIAL PRIMARY KEY,
            classify_name VARCHAR(255) NOT NULL
          );
          `,
-         `CREATE TABLE Types (
+        `CREATE TABLE Types (
             type_id SERIAL PRIMARY KEY,
             type_name VARCHAR(255) NOT NULL,
             classify_id INT REFERENCES Classifications(classify_id) NOT NULL
@@ -60,33 +59,33 @@
             glassLensesColor_id SERIAL PRIMARY KEY,   
             color VARCHAR(100) NOT NULL
           );`,
-          `CREATE TABLE glassSize (
+        `CREATE TABLE glassSize (
             glassSize_id SERIAL PRIMARY KEY,
             size VARCHAR(10) NOT NULL
           );`,
-          `
+        `
           CREATE TABLE framType (
            framType_id SERIAL PRIMARY KEY,   
             type VARCHAR(255) NOT NULL
-          );` ,
-          `CREATE TABLE frameMaterial (
+          );`,
+        `CREATE TABLE frameMaterial (
             frameMaterial_id SERIAL PRIMARY KEY,
             material VARCHAR(255) NOT NULL
           );`,
-          `CREATE TABLE glassBrands (
+        `CREATE TABLE glassBrands (
             brand_id SERIAL PRIMARY KEY,
             brand_name VARCHAR(255) NOT NULL
           );`,
-          `CREATE TABLE frameShape (
+        `CREATE TABLE frameShape (
             frameShape_id SERIAL PRIMARY KEY,
             shape VARCHAR(255) NOT NULL
           );`,
-          `CREATE TABLE frameColor (
+        `CREATE TABLE frameColor (
             frameColor_id SERIAL PRIMARY KEY,
             color VARCHAR(255) NOT NULL
           );
           `,
-          `CREATE TABLE glassProducts (
+        `CREATE TABLE glassProducts (
             product_id SERIAL PRIMARY KEY,
             product_name VARCHAR(255) NOT NULL,
             salary INT NOT NULL,
@@ -100,25 +99,25 @@
             glassSize_id INT REFERENCES glassSize(glassSize_id),
             glassLensesColor_id INT REFERENCES glassLensesColor(glassLensesColor_id)
           );`,
-          `CREATE TABLE lensesBrands (
+        `CREATE TABLE lensesBrands (
             brand_id SERIAL PRIMARY KEY,
             brand_name VARCHAR(255) NOT NULL
           );`,
-          `CREATE TABLE lensesColor (
+        `CREATE TABLE lensesColor (
             lensesColor_id SERIAL PRIMARY KEY,
             color VARCHAR(255) NOT NULL
           );`,
-          `CREATE TABLE lensesReplacement (
+        `CREATE TABLE lensesReplacement (
             lensesReplacement_id SERIAL PRIMARY KEY,
             replacement VARCHAR(255) NOT NULL
           );
           `,
-          `CREATE TABLE lensesType (
+        `CREATE TABLE lensesType (
             lensesType_id SERIAL PRIMARY KEY,
             lensesType VARCHAR(255) NOT NULL
           );
           `,
-          `CREATE TABLE lensesProducts (
+        `CREATE TABLE lensesProducts (
             product_id SERIAL PRIMARY KEY,
             product_name VARCHAR(255) NOT NULL,
             salary INT NOT NULL,
@@ -129,13 +128,13 @@
             lensesReplacement_id INT REFERENCES lensesReplacement(lensesReplacement_id),
             lensesType_id INT REFERENCES lensesType(lensesType_id)
           );`,
-          `
+        `
           create table imagesGlassesProduct (
               image_id varchar(255) primary key,
               product_id int references glassProducts(product_id) not null,
               image varchar(255) not null 
           )`,
-          `create table imagesLensessProduct (
+        `create table imagesLensessProduct (
             image_id varchar(255) primary key,
             product_id int references lensesProducts(product_id) not null,
             image varchar(255) not null 
@@ -162,22 +161,22 @@
         user_id INT REFERENCES users(id),	
         Quentity INT DEFAULT 1
         )
-        `
+        `,
 
-         // ... continue with other table creation queries
-       ];
- 
-       for (const query of createTableQueries) {
-         await client.query(query);
-       }
- 
-       console.log("Tables created successfully!");
-     } else {
-       console.log("Tables already exist!");
-     }
-   } catch (error) {
-     console.error("Error occurred:", error);
-   } 
- }
- 
- module.exports = isReady;
+        // ... continue with other table creation queries
+      ];
+
+      for (const query of createTableQueries) {
+        await client.query(query);
+      }
+
+      console.log("Tables created successfully!");
+    } else {
+      console.log("Tables already exist!");
+    }
+  } catch (error) {
+    console.error("Error occurred:", error);
+  }
+}
+
+module.exports = isReady;

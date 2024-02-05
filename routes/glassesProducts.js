@@ -153,4 +153,24 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+router.get("/:id", async (req, res) => {
+  try {
+    let id = req.params.id ; 
+    let sql = `SELECT gp.product_id, gp.product_name, gp.salary, gp.model_number, typs.type_name AS "type", bra.brand_name AS "brand name", sh.shape AS "shape", ft.type AS "frame type",  fc.color AS "frame color", fm.material AS "frame material", gs.size AS "size", glc.color AS "lenses color" FROM glassProducts gp JOIN Types typs ON gp.type_id = typs.type_id JOIN glassBrands bra ON gp.brand_id = bra.brand_id JOIN frameShape sh ON gp.frameShape_id = sh.frameShape_id JOIN framType ft ON gp.framType_id = ft.framType_id JOIN frameColor fc ON gp.frameColor_id = fc.frameColor_id JOIN frameMaterial fm ON gp.frameMaterial_id = fm.frameMaterial_id JOIN glassSize gs ON gp.glassSize_id = gs.glassSize_id JOIN glassLensesColor glc ON gp.glassLensesColor_id = glc.glassLensesColor_id where product_id = $1;`,
+      result = (await client.query(sql,[id])).rows;
+
+    for (let i = 0; i < result.length; i++) {
+      let pID = result[i].product_id,
+        sql2 =
+          "select image ,image_id from  imagesGlassesProduct where product_id = $1 ";
+      images = (await client.query(sql2, [pID])).rows;
+      result[i].images = images;
+    }
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+
 module.exports = router;
