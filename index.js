@@ -34,16 +34,17 @@ app.use("/api/lenses", require("./routes/lenses"));
 app.use("/api/basket", require("./routes/basket/addToBasket"));
 app.use("/api/offer", require("./routes/offer"));
 app.use("/api/offerproduct", require("./routes/offerproducts"));
+app.use("/api/product", require("./routes/productPage"));
 
 app.get("/", (req, res) => res.send("Hello World!"));
 
 client
   .connect()
-  .then(() => {
+  .then(async() => {
     console.log("psql is connected ..");
     app.listen(port, () =>
       console.log(`Example app listening on port ${port}!`)
     );
-    isReady();
+    await isReady();
   })
   .catch((error) => console.log(error));

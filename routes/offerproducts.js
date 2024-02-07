@@ -9,8 +9,9 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
     let id = req.params.id;
     let condtion1 = id ? `WHERE gp.product_id = ${id}` : ``;
     let condtion2 = id ? `WHERE lp.product_id = ${id}` : ``;
-
+    let imagesTable = ""
     if (type == 1) {
+      imagesTable = 'imagesGlassesProduct'
       sql = `
       SELECT gp.product_id, gp.product_name, gp.salary AS salary_before,  (gp.salary - ((gp.salary * go.percent )/100))   AS salary_after, go.percent AS percent  , gp.model_number, typs.type_name AS "type", 
         bra.brand_name AS "brand_name", sh.shape AS "shape", ft.type AS "frame_type", fc.color AS "frame_color", 
@@ -28,6 +29,7 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
       ${condtion1};
     `;
     } else if (type == 2) {
+      imagesTable = 'imagesLensessProduct'
       sql = `
         SELECT lp.product_id, lp.product_name,lp.salary AS salary_before,  (lp.salary - ((lp.salary * lo.percent )/100))   AS salary_after,lo.percent AS percent, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType" FROM lensesProducts lp JOIN types typs ON lp.type_id = typs.type_id JOIN lensesBrands bra ON lp.brand_id = bra.brand_id JOIN lensesColor lc ON lp.lensesColor_id = lc.lensesColor_id JOIN lensesReplacement lr ON lp.lensesReplacement_id = lr.lensesReplacement_id JOIN lensesType lt ON lp.lensesType_id = lt.lensesType_id JOIN lensesoffer lo ON lp.brand_id = lo.brand_id ${condtion2};`;
     } else {
@@ -41,7 +43,7 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
     for (let i = 0; i < result.length; i++) {
       let pID = result[i].product_id;
       let sql2 =
-        "SELECT image, image_id FROM imagesGlassesProduct WHERE product_id = $1";
+        `SELECT image, image_id FROM ${imagesTable} WHERE product_id = $1`;
       let images = (await client.query(sql2, [pID])).rows;
       result[i].images = images;
     }
