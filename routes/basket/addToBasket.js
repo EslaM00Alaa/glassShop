@@ -52,7 +52,7 @@ router.get('/', isUser, async (req, res) => {
       let imagesResult = await client.query(sqlImage, [product.product_id]);
       let images = imagesResult.rows;
       productInfo.images = images;
-      let TotalSalry=(product.salary*product.quentity)
+      let TotalSalry=(productInfo.salary*product.quentity)
       ar.push({ id: product.id, quentity: product.quentity,productInfo,TotalSalry });
     }
 

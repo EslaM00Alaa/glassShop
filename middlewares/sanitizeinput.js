@@ -14,9 +14,13 @@ function sanitizeInput(req, res, next) {
   
   function sanitizeString(value) {
     // Remove any characters that can potentially harm the database
-    const sanitizedValue = value.replace(/[<>&'"`;]/g, '');
+    if(isNaN(value)){
+      const sanitizedValue = value.replace(/[<>&'"`;]/g, '');
   
-    return sanitizedValue;
-  }
+      return sanitizedValue;
+    
+    }
+    return value;
+    }
 
   module.exports = sanitizeInput ;
