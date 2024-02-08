@@ -1,4 +1,5 @@
 const isReady = require("./database/dbready");
+const sanitizeInput = require("./middlewares/sanitizeinput");
 
 require("dotenv").config();
 const express = require("express"),
@@ -23,18 +24,19 @@ app.use(express.json());
 app.use(helmet());
 app.use(cors());
 
-app.use("/api/admin", require("./routes/admin"));
-app.use("/api/user", require("./routes/user"));
-app.use("/api/classification", require("./routes/classifications"));
-app.use("/api/type", require("./routes/types"));
-app.use("/api/glasses", require("./routes/glasses"));
-app.use("/api/glassesProduct", require("./routes/glassesProducts"));
-app.use("/api/lensesProduct", require("./routes/lensesproduct"));
-app.use("/api/lenses", require("./routes/lenses"));
-app.use("/api/basket", require("./routes/basket/addToBasket"));
-app.use("/api/offer", require("./routes/offer"));
-app.use("/api/offerproduct", require("./routes/offerproducts"));
-app.use("/api/product", require("./routes/productPage"));
+
+app.use("/api/admin",sanitizeInput, require("./routes/admin"));
+app.use("/api/user",sanitizeInput, require("./routes/user"));
+app.use("/api/classification", sanitizeInput,require("./routes/classifications"));
+app.use("/api/type", sanitizeInput,require("./routes/types"));
+app.use("/api/glasses", sanitizeInput,require("./routes/glasses"));
+app.use("/api/glassesProduct", sanitizeInput,require("./routes/glassesProducts"));
+app.use("/api/lensesProduct", sanitizeInput,require("./routes/lensesproduct"));
+app.use("/api/lenses",sanitizeInput ,require("./routes/lenses"));
+app.use("/api/basket",sanitizeInput ,require("./routes/basket/addToBasket"));
+app.use("/api/offer",sanitizeInput ,require("./routes/offer"));
+app.use("/api/offerproduct",sanitizeInput ,require("./routes/offerproducts"));
+app.use("/api/product",sanitizeInput ,require("./routes/productPage"));
 
 app.get("/", (req, res) => res.send("Hello World!"));
 

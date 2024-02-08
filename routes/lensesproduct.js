@@ -120,4 +120,29 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+
+router.delete("/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+
+    // Get the image_id associated with the product
+    let imageSql = "SELECT image_id FROM imagesLensessProduct WHERE product_id = $1";
+    let imageResult = await client.query(imageSql, [id]);
+    let imageId = imageResult.rows[0].image_id;
+
+    // Delete the image from Cloudinary using cloudinaryRemoveImage function
+    await cloadinaryRemoveImage(imageId);
+    await client.query("DELETE FROM imagesLensessProduct WHERE product_id = $1 ",[id]) 
+    // Delete the product from the database
+    let deleteSql = "DELETE FROM lensesProducts WHERE product_id = $1";
+    await client.query(deleteSql, [id]);
+
+    res.json({ msg: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+
+
+
 module.exports = router;
