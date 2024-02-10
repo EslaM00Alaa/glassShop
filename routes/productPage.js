@@ -59,7 +59,6 @@ const router = express.Router();
 //     res.status(500).json({ msg: error.message });
 //   }
 // });
-
 router.get(["/:type", "/:type/:pid"], async (req, res) => {
   try {
     let pageN = req.query.pageN;
@@ -88,8 +87,7 @@ router.get(["/:type", "/:type/:pid"], async (req, res) => {
       JOIN glassSize AS gs ON gp.glassSize_id = gs.glassSize_id
       JOIN glassLensesColor AS glc ON gp.glassLensesColor_id = glc.glassLensesColor_id
       LEFT JOIN glassoffer AS go ON gp.brand_id = go.brand_id
-      WHERE ${condition}
-      ${pagination}`;
+      WHERE ${condition}`;
     } else {
       sql = `SELECT lp.product_id, lp.product_name, lp.salary AS salary_before, (lp.salary - ((lp.salary * lo.percent) / 100)) AS salary_after, lo.percent AS percent, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType"
       FROM lensesProducts AS lp
@@ -99,11 +97,21 @@ router.get(["/:type", "/:type/:pid"], async (req, res) => {
       JOIN lensesReplacement AS lr ON lp.lensesReplacement_id = lr.lensesReplacement_id
       JOIN lensesType AS lt ON lp.lensesType_id = lt.lensesType_id
       LEFT JOIN lensesoffer AS lo ON lp.brand_id = lo.brand_id
-      WHERE ${condition}
-      ${pagination};`;
+      WHERE ${condition}`;
     }
 
     let result = (await client.query(sql)).rows;
+    let totalProducts = result.length;
+    let totalPages = Math.ceil(totalProducts / 16);
+
+    if (pageN && pageN > totalPages) {
+      return res.status(404).json({ msg: "Page not found" });
+    }
+
+    if (pageN) {
+      sql += ` ${pagination}`;
+      result = (await client.query(sql)).rows;
+    }
 
     for (let i = 0; i < result.length; i++) {
       let pID = result[i].product_id;
@@ -111,7 +119,8 @@ router.get(["/:type", "/:type/:pid"], async (req, res) => {
       let images = (await client.query(sql2, [pID])).rows;
       result[i].images = images;
     }
-    res.json(result);
+
+    res.json({ result, totalPages });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
