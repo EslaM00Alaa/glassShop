@@ -62,7 +62,7 @@ const router = express.Router();
 router.get(["/:type", "/:type/:pid"], async (req, res) => {
   try {
     let pageN = req.query.pageN;
-    let pagination = pageN ? `LIMIT 16 OFFSET ${(pageN - 1) * 16}; ` : "";
+    let pagination = pageN ? `LIMIT 4 OFFSET ${(pageN - 1) * 4}; ` : "";
     let i = req.params.type;
     let label = i < 6 ? "gp" : "lp";
     let imagesTable = i < 6 ? "imagesGlassesProduct" : "imagesLensessProduct";
@@ -102,7 +102,7 @@ router.get(["/:type", "/:type/:pid"], async (req, res) => {
 
     let result = (await client.query(sql)).rows;
     let totalProducts = result.length;
-    let totalPages = Math.ceil(totalProducts / 16);
+    let totalPages = Math.ceil(totalProducts /4);
 
     if (pageN && pageN > totalPages) {
       return res.status(404).json({ msg: "Page not found" });
