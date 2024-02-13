@@ -75,8 +75,7 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
     let pagination = `LIMIT ${limit} OFFSET ${offset}`;
 
     let imagesTable = "";
-    let totalRecords = 0;
-    
+
     if (type == 1) {
       imagesTable = 'imagesGlassesProduct'
       sql = `
@@ -110,9 +109,8 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
     }
 
     const results = await client.query(sql);
-
-    const totalRows = results[0].rows[0].total; // Get total number of records
-    const totalPages = Math.ceil(totalRows / limit); // Calculate total number of pages
+    const totalRecords = results[0].rows[0].total; // Get total number of records
+    const totalPages = Math.ceil(totalRecords / limit); // Calculate total number of pages
 
     const data = results[1].rows;
 
