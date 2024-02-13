@@ -75,8 +75,8 @@ router.delete("/:t/:id",isAdmin,async(req,res) => {
     }
 
     sql = `DELETE FROM ${table} WHERE id = $1 ;`;
-    let result = await client.query(sql,[id]);
-    res.json(result.rows);
+     await client.query(sql,[id]);
+    res.json("deleted succsessfuly ");
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
