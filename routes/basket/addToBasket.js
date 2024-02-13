@@ -54,7 +54,7 @@ router.get('/', isUser, async (req, res) => {
       productInfo.images = images;
       let TotalSalry=(productInfo.salary*product.quentity)
       ar.push({ id: product.id, quentity: product.quentity,productInfo,TotalSalry });
-      tatal+=product.TotalSalry;
+      total+=TotalSalry;
     }
 ar.push({total})
     res.json(ar);
