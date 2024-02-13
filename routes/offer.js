@@ -33,9 +33,34 @@ router.post("/add/:t", isAdmin, async (req, res) => {
     }
   });
 
-router.get("/:t",isAdmin,async(req,res) => {
-  try {
+// router.get("/:t",isAdmin,async(req,res) => {
+//   try {
 
+//     let type = req.params.t;
+//     let table = "";
+//     let brand = "";
+//     let sql = "";
+
+//     if (type == 1) {
+//       table = "glassoffer";
+//       brand = "glassbrands"
+//     } else if (type == 2) {
+//       table = "lensesoffer";
+//       brand = "lensesbrands"
+//     } else {
+//       return res.status(404).json({ msg: "The parameter must be '1' or '2'." });
+//     }
+
+//     sql = `Select *p , b.brand_name  FROM  ${table} p join ${brand} b  on p.brand_id = b.brand_id  ;`;
+
+//     let result = await client.query(sql);
+//     res.json(result.rows);
+//   } catch (error) {
+//     res.status(500).json({ msg: error.message });
+//   }
+// });
+router.get("/:t", isAdmin, async (req, res) => {
+  try {
     let type = req.params.t;
     let table = "";
     let brand = "";
@@ -43,15 +68,15 @@ router.get("/:t",isAdmin,async(req,res) => {
 
     if (type == 1) {
       table = "glassoffer";
-      brand = "glassbrands"
+      brand = "glassbrands";
     } else if (type == 2) {
       table = "lensesoffer";
-      brand = "lensesbrands"
+      brand = "lensesbrands";
     } else {
       return res.status(404).json({ msg: "The parameter must be '1' or '2'." });
     }
 
-    sql = `Select * p , b.brand_name  FROM  ${table} p join ${brand} b  on p.brand_id = b.brand_id  ;`;
+    sql = `SELECT p.*, b.brand_name FROM ${table} p JOIN ${brand} b ON p.brand_id = b.brand_id`;
 
     let result = await client.query(sql);
     res.json(result.rows);
