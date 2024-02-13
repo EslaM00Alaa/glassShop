@@ -42,7 +42,7 @@ router.get('/', isUser, async (req, res) => {
   try {
     let sql1 = `SELECT gp.product_id, gp.product_name, gp.salary, gp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", sh.shape AS "shape", ft.type AS "frame_type", fc.color AS "frame_color", fm.material AS "frame_material", gs.size AS "size", glc.color AS "lenses color" FROM glassProducts gp JOIN Types typs ON gp.type_id = typs.type_id JOIN glassBrands bra ON gp.brand_id = bra.brand_id JOIN frameShape sh ON gp.frameShape_id = sh.frameShape_id JOIN framType ft ON gp.framType_id = ft.framType_id JOIN frameColor fc ON gp.frameColor_id = fc.frameColor_id JOIN frameMaterial fm ON gp.frameMaterial_id = fm.frameMaterial_id JOIN glassSize gs ON gp.glassSize_id = gs.glassSize_id JOIN glassLensesColor glc ON gp.glassLensesColor_id = glc.glassLensesColor_id WHERE gp.product_id = $1;`;
     let sql2 = `SELECT lp.product_id, lp.product_name, lp.salary, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType" FROM lensesProducts lp JOIN types typs ON lp.type_id = typs.type_id JOIN lensesBrands bra ON lp.brand_id = bra.brand_id JOIN lensesColor lc ON lp.lensesColor_id = lc.lensesColor_id JOIN lensesReplacement lr ON lp.lensesReplacement_id = lr.lensesReplacement_id JOIN lensesType lt ON lp.lensesType_id = lt.lensesType_id WHERE lp.product_id = $1;`;
-
+    let total =0;
     let result = await client.query('SELECT * FROM basket WHERE user_id = $1;', [req.body.user_id]);
     let ar = [];
     for (let product of result.rows) {
@@ -54,8 +54,9 @@ router.get('/', isUser, async (req, res) => {
       productInfo.images = images;
       let TotalSalry=(productInfo.salary*product.quentity)
       ar.push({ id: product.id, quentity: product.quentity,productInfo,TotalSalry });
+      tatal+=product.TotalSalry;
     }
-
+ar.push({total})
     res.json(ar);
   } catch (error) {
     return res.status(404).json({ msg: error.message });
