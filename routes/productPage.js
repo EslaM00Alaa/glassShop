@@ -102,7 +102,7 @@ router.get(["/:type", "/:type/:pid"], async (req, res) => {
 
     let result = (await client.query(sql)).rows;
     let totalProducts = result.length;
-    let totalPages = Math.ceil(totalProducts /4);
+    let totalPages = Math.ceil(totalProducts /16);
 
     if (pageN && pageN > totalPages) {
       return res.status(404).json({ msg: "Page not found" });
