@@ -76,7 +76,7 @@ router.get(["/:type", "/:type/:pid"], async (req, res) => {
       condition += ` AND ${label}.product_id = ${req.params.pid}`;
 
     if (i < 6) {
-      sql = `SELECT gp.product_id, gp.product_name, gp.salary AS salary_before, (gp.salary - ((gp.salary * go.percent) / 100)) AS salary_after, go.percent AS percent, gp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", sh.shape AS "shape", ft.type AS "frame_type", fc.color AS "frame_color", fm.material AS "frame_material", gs.size AS "size", glc.color AS "lenses_color"
+      sql = `SELECT gp.product_id,gp.type_id , gp.product_name, gp.salary AS salary_before, (gp.salary - ((gp.salary * go.percent) / 100)) AS salary_after, go.percent AS percent, gp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", sh.shape AS "shape", ft.type AS "frame_type", fc.color AS "frame_color", fm.material AS "frame_material", gs.size AS "size", glc.color AS "lenses_color"
       FROM glassProducts AS gp
       JOIN Types AS typs ON gp.type_id = typs.type_id
       JOIN glassBrands AS bra ON gp.brand_id = bra.brand_id
@@ -89,7 +89,7 @@ router.get(["/:type", "/:type/:pid"], async (req, res) => {
       LEFT JOIN glassoffer AS go ON gp.brand_id = go.brand_id
       WHERE ${condition}`;
     } else {
-      sql = `SELECT lp.product_id, lp.product_name, lp.salary AS salary_before, (lp.salary - ((lp.salary * lo.percent) / 100)) AS salary_after, lo.percent AS percent, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType"
+      sql = `SELECT lp.product_id,lp.type_id ,lp.product_name, lp.salary AS salary_before, (lp.salary - ((lp.salary * lo.percent) / 100)) AS salary_after, lo.percent AS percent, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType"
       FROM lensesProducts AS lp
       JOIN types AS typs ON lp.type_id = typs.type_id
       JOIN lensesBrands AS bra ON lp.brand_id = bra.brand_id
