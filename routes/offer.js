@@ -50,8 +50,8 @@ router.get("/:t",isAdmin,async(req,res) => {
 
     sql = `Select * FROM  ${table} ;`;
 
-    await client.query(sql);
-    res.json({ msg: "OFFER CREATED SUCCESSFULLY" });
+    let result = await client.query(sql);
+    res.json(result.rows);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
