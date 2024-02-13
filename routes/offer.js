@@ -21,7 +21,7 @@ router.post("/add/:t", isAdmin, async (req, res) => {
       } else if (type == 2) {
         table = "lensesoffer";
       } else {
-        return res.status(404).json({ msg: "The parameter must be 'glass' or 'lenses'." });
+        return res.status(404).json({ msg: "The parameter must be '1' or '2'." });
       }
   
       sql = `INSERT INTO ${table} (brand_id, percent) VALUES ($1, $2);`;
@@ -33,6 +33,29 @@ router.post("/add/:t", isAdmin, async (req, res) => {
     }
   });
 
+router.get("/:t",isAdmin,async(req,res) => {
+  try {
+
+    let type = req.params.t;
+    let table = "";
+    let sql = "";
+
+    if (type == 1) {
+      table = "glassoffer";
+    } else if (type == 2) {
+      table = "lensesoffer";
+    } else {
+      return res.status(404).json({ msg: "The parameter must be '1' or '2'." });
+    }
+
+    sql = `Select * FROM  ${table} ;`;
+
+    await client.query(sql);
+    res.json({ msg: "OFFER CREATED SUCCESSFULLY" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
 
 
 
