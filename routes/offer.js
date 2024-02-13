@@ -58,6 +58,30 @@ router.get("/:t",isAdmin,async(req,res) => {
 });
 
 
+router.delete("/:t/:id",isAdmin,async(req,res) => {
+  try {
+
+    let type = req.params.t;
+    let id = req.params.id ;
+    let table = "";
+    let sql = "";
+
+    if (type == 1) {
+      table = "glassoffer";
+    } else if (type == 2) {
+      table = "lensesoffer";
+    } else {
+      return res.status(404).json({ msg: "The parameter must be '1' or '2'." });
+    }
+
+    sql = `DELETE FROM ${table} WHERE id = $1 ;`;
+    let result = await client.query(sql,[id]);
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+
 
 
 
