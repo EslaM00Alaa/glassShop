@@ -111,7 +111,7 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
 
     const results = await client.query(sql);
 
-    const totalRows = results[0].rows[0].length; // Get total number of records
+    const totalRows = results[0].rows[0].total; // Get total number of records
     const totalPages = Math.ceil(totalRows / limit); // Calculate total number of pages
 
     const data = results[1].rows;
