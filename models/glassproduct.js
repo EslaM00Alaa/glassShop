@@ -17,4 +17,13 @@ function validateglassProduct(obj) {
   return schema.validate(obj);
 }
 
-module.exports = validateglassProduct;
+function validateglassProductUpdate (obj) {
+  const schema = joi.object({
+    product_name: joi.string().trim().required(),
+    model_number: joi.string(),
+    salary: joi.number().required()
+})
+return schema.validate(obj);
+}
+
+module.exports = {validateglassProduct,validateglassProductUpdate};

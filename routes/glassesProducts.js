@@ -3,7 +3,7 @@ const client = require("../database/db");
 const isAdmin = require("../middlewares/IsAdmin");
 const router = express.Router();
 const photoUpload = require("../utils/uploadimage");
-const validateglassProduct = require("../models/glassproduct");
+const  {validateglassProduct,validateglassProductUpdate} = require("../models/glassproduct");
 const path = require("path");
 const fs = require("fs");
 const {
@@ -64,7 +64,7 @@ const {
 //   }
 // );
 
-router.post("/add", isAdmin, photoUpload.array("image", 4), async (req, res) => {
+router.post("/add",  photoUpload.array("image", 4),isAdmin, async (req, res) => {
   try {
     // Validation
     if (!req.files || req.files.length === 0) {
@@ -172,6 +172,29 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 });
+
+router.put("/:id",isAdmin,async(req,res)=>{
+  try {
+    const { error } = validateglassProductUpdate(req.body);
+    if (error) {
+      return res.status(400).json({ msg: error.details[0].message });
+    }
+    const { product_name, salary, model_number } = req.body;
+    const productId = req.params.id;
+
+    const result = await client.query("UPDATE glassproducts SET product_name = $1, salary = $2, model_number = $3 WHERE product_id = $4", [product_name, salary, model_number, productId]);
+    
+    if (result.rowCount === 0) {
+      return res.status(404).json({ msg: "Product not found." });
+    }
+
+    res.json({ msg: "Updated product." });
+  } catch (error) {
+    console.error("Error in updating product:", error);
+    res.status(500).json({ msg: "Internal server error." });
+  }
+});
+
 
 router.delete("/:id", async (req, res) => {
   try {
