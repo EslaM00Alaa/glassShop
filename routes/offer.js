@@ -24,7 +24,7 @@ router.post("/add/:t", isAdmin, async (req, res) => {
         return res.status(404).json({ msg: "The parameter must be '1' or '2'." });
       }
   
-      if(await client.query(`SELECT FROM ${table} WHERE brand_id = $1 `,[req.body.brand_id]) )
+      if((await client.query(`SELECT FROM ${table} WHERE brand_id = $1 `,[req.body.brand_id])).rows.length>0 )
           return res.status(404).json({msg:"this brand has offer already"})
       sql = `INSERT INTO ${table} (brand_id, percent) VALUES ($1, $2);`;
   
