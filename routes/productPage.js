@@ -62,7 +62,7 @@ const router = express.Router();
 router.get(["/:type", "/:type/:pid"], async (req, res) => {
   try {
     let pageN = req.query.pageN;
-    let pagination = pageN ? `LIMIT 4 OFFSET ${(pageN - 1) * 4}; ` : "";
+    let pagination = pageN ? `LIMIT 16 OFFSET ${(pageN - 1) * 16}; ` : "";
     let i = req.params.type;
     let label = i < 6 ? "gp" : "lp";
     let imagesTable = i < 6 ? "imagesGlassesProduct" : "imagesLensessProduct";
