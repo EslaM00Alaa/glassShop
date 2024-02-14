@@ -80,7 +80,7 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
       imagesTable = 'imagesGlassesProduct'
       sql = `
         SELECT COUNT(*) AS total FROM glassProducts gp ${condition1};
-        SELECT gp.product_id, gp.product_name, gp.salary AS salary_before, (gp.salary - ((gp.salary * go.percent) / 100)) AS salary_after, go.percent AS percent, gp.model_number, typs.type_name AS "type", 
+        SELECT gp.product_id, gp.type_id,  gp.product_name, gp.salary AS salary_before, (gp.salary - ((gp.salary * go.percent) / 100)) AS salary, go.percent AS percent, gp.model_number, typs.type_name AS "type", 
         bra.brand_name AS "brand_name", sh.shape AS "shape", ft.type AS "frame_type", fc.color AS "frame_color", 
         fm.material AS "frame_material", gs.size AS "size", glc.color AS "lenses_color" 
         FROM glassProducts gp 
@@ -100,7 +100,7 @@ router.get(["/:t", "/:t/:id"], async (req, res) => {
       imagesTable = 'imagesLensessProduct'
       sql = `
         SELECT COUNT(*) AS total FROM lensesProducts lp ${condition2};
-        SELECT lp.product_id, lp.product_name, lp.salary AS salary_before, (lp.salary - ((lp.salary * lo.percent) / 100)) AS salary_after, lo.percent AS percent, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType" FROM lensesProducts lp JOIN types typs ON lp.type_id = typs.type_id JOIN lensesBrands bra ON lp.brand_id = bra.brand_id JOIN lensesColor lc ON lp.lensesColor_id = lc.lensesColor_id JOIN lensesReplacement lr ON lp.lensesReplacement_id = lr.lensesReplacement_id JOIN lensesType lt ON lp.lensesType_id = lt.lensesType_id JOIN lensesoffer lo ON lp.brand_id = lo.brand_id ${condition2} ${pagination};
+        SELECT lp.product_id,lp.type_id ,lp.product_name, lp.salary AS salary_before, (lp.salary - ((lp.salary * lo.percent) / 100)) AS salary, lo.percent AS percent, lp.model_number, typs.type_name AS "type", bra.brand_name AS "brand_name", lc.color AS "color", lr.replacement AS "replacement", lt.lensesType AS "lensesType" FROM lensesProducts lp JOIN types typs ON lp.type_id = typs.type_id JOIN lensesBrands bra ON lp.brand_id = bra.brand_id JOIN lensesColor lc ON lp.lensesColor_id = lc.lensesColor_id JOIN lensesReplacement lr ON lp.lensesReplacement_id = lr.lensesReplacement_id JOIN lensesType lt ON lp.lensesType_id = lt.lensesType_id JOIN lensesoffer lo ON lp.brand_id = lo.brand_id ${condition2} ${pagination};
       `;
     } else {
       return res
