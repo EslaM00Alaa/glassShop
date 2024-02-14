@@ -56,8 +56,8 @@ router.get('/', isUser, async (req, res) => {
       ar.push({ id: product.id, quentity: product.quentity,productInfo,TotalSalry });
       total+=TotalSalry;
     }
-ar.push({total})
-    res.json(ar);
+
+    res.json({data:ar,total});
   } catch (error) {
     return res.status(404).json({ msg: error.message });
   }
